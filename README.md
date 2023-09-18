@@ -1,4 +1,4 @@
-# Custom `printf` function - ALX Project
+# Our Customized `printf` function - Alx SE Project
 
 ## Members of the Team
 - Godson Antwi
