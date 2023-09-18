@@ -14,50 +14,49 @@
 
 
 
-void call_sp(const char *format, int *i, struct sp_char *p, int *pCount, va_list pa) /*Prototype */
+void call_sp(const char *format, int *i, struct sp_char *p,
+    int *pCount, va_list pa)
 {
-    int j, k = 3; ?/*the variables we are using */
-    va_list ap; /* Create a copy of the va_list to preserve the original */
+    int j, k = 3; /* Initialize variables 'j' and 'k' with initial values */
     int index = *i; /* Initialize 'index' with the current position in the 'format' string */
-    int flagg = 0; /* Initialize 'flagg' to 0 to keep track of special flags */
-    sign flag[] = {{'+', postive_sign}, {' ', space_sign}, {'#', window_sign}, {'\0', NULL}};
+    va_list ap; /* Declare a new va_list 'ap' to copy the 'pa' argument list */
+    int flagg = 0; /* Initialize 'flagg' to 0 to track flag presence */
+    sign flag[] = {{'+', postive_sign}, {' ', space_sign}, {'#', window_sign},
+        {'\0', NULL}}; /* Define an array of 'sign' structures for flag handling */
 
-    va_copy(ap, pa); /* Copy the variadic argument list to 'ap' to avoid altering the original */
-
-    /* Loop through the characters in 'format' until no matching flags are found */
+    va_copy(ap, pa); /* Copy the 'pa' argument list into 'ap' */
     while (signIndex(format[index], flag) != -1)
     {
-        for (k = 0; flag[k].ch != '\0'; k++) /* Check for supported flags */
+        for (k = 0; flag[k].ch != '\0'; k++)/* Loop to check for flags in 'format' string */
         {
             if (format[index] == flag[k].ch)
             {
-                if (format[index] == '+' && flagg < 2)
-                    flagg = 1; /* Set 'flagg' to 1 for '+' flag */
-                else if (format[index] == '#')
-                    flagg = 2; /* Set 'flagg' to 2 for '#' flag */
+                if (format[index] == '+' && flagg < 2) /* Check for the '+' flag */
+                    flagg = 1; /* Set 'flagg' to 1 */
+                else if (format[index] == '#') /* Check for the '#' flag */
+                    flagg = 2; /* Set 'flagg' to 2 for window flag */
                 index++; /* Move to the next character in 'format' */
-                break; /* Exit the loop after finding a matching flag */
+                break; /* Exit the loop */
             }
         }
     }
-
-    j = spIndex(format[index], p); /* Get the index of the special character in 'p' array */
-
-    if (j != -1) /* Check if a matching special character was found */
+    j = spIndex(format[index], p);/* Get the index of the special character in 'p' */
+    if (j != -1) /* Check if a valid index was found */
     {
-        if (flag[k].ch != '\0')
-            flag[k].fun(flagg, flag[k].ch, j, ap, pCount); /* Call flag function if a flag is present */
-        p[j].fun(pa, pCount); /* Call the appropriate function to handle the argument */
-        *i = index; /* Update 'i' with the new index position */
+        if (flag[k].ch != '\0') /* Check if there was a flag */
+            flag[k].fun(flagg, flag[k].ch, j, ap, pCount);/* Call the flag handling function */
+        p[j].fun(pa, pCount); /* Call the corresponding argument handling function */
+        *i = index; /* Update 'i' to the current position */
     }
     else
     {
-        _putchar('%'); /* Print '%' character as it's not a valid specifier */
-        (*i)--; /* Decrement 'i' to reprocess the '%' character */
-        (*pCount) += 1; /* Increment the character count */
+        _putchar('%'); /* Print a '%' character */
+        (*i)--; /* Decrement 'i' to go back to the '%' character in 'format' */
+        *pCount += 1; /* Increment the character count */
         return; /* Return from the function */
     }
 }
+
 
 
 
@@ -109,3 +108,4 @@ int _printf(const char *format, ...)
 	va_end(pa); /* Clean up the va_list */
 	return (count); /* Return the total character count */
 }
+
