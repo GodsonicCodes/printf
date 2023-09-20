@@ -66,5 +66,6 @@ void window_sign(int flag, char ch, int j, va_list ap, int *pCount);
 int _strlen(char *s);
 int _printf(const char *format, ...);
 int spIndex(char ch, struct sp_char *p);
+void custom_printf(const char *format, ...);
 
 #endif
